@@ -70,9 +70,9 @@
 
                                     <td>{{ $item->fiscal_year }}</td>
                                     <td>{{ $item->tran_desc }}</td>
-                                    <td>{{ $item->dbit }}</td>
-                                    <td>{{ $item->cbit }}</td>
-                                    <td><strong>{{ $item->bal }}</strong></td>
+                                    <td>{{ number_format($item->dbit, 2) }}</td>
+                                    <td>{{ number_format($item->cbit, 2) }}</td>
+                                    <td><strong>{{ number_format($item->bal, 2) }}</strong></td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -101,7 +101,7 @@
                                     <td>{{ $item->payment_ref_no }}</td>
                                     <td>{{ $item->payment_type }}</td>
                                     <td>{{ $item->or_no }}</td>
-                                    <td><strong>{{ $item->payment_total_amt }}</strong></td>
+                                    <td>{{ number_format($item->payment_total_amt, 2) }}</td>
                                     <td><strong>{{ $item->userid }}</strong></td>
                                 </tr>
                             @endforeach
@@ -132,7 +132,7 @@
                                     <td>{{ $item->trancode }}</td>
                                     <td>{{ $item->itemcode }}</td>
                                     <td>{{ $item->description }}</td>
-                                    <td><strong>{{ $item->amount }}</strong></td>
+                                    <td>{{ number_format($item->amount, 2) }}</td>
                                     <td><strong>{{ $item->orno }}</strong></td>
                                     <td><strong>{{ $item->paydate }}</strong></td>
                                 </tr>

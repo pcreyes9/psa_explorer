@@ -109,7 +109,7 @@
         </li>
 
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">PSA USER</span>
+            <span class="menu-header-text">PSA USER: <strong>{{ Auth::user()->username }}</strong></span>
         </li>
         <li class="menu-item">
             <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();" href="{{ route('logout') }}" class="menu-link">
@@ -121,6 +121,5 @@
                 </form>
             </a>
         </li>
-    
     </ul>
 </aside>

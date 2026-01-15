@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LoginController;
-use App\Livewire\Membership\MemAcc;
+use App\Http\Controllers\RegisterController;
 
 
 Route::middleware('guest')->group(function () {
@@ -12,7 +12,18 @@ Route::middleware('guest')->group(function () {
         return view('auth.login');
     })->name('login');
 
+    Route::get('/register', function () {
+        return view('auth.register');
+    })->name('register');
+
+   
+
+    Route::get('/register', [RegisterController::class, 'create'])->name('register');
+    Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
+
+
     Route::post('/login', LoginController::class)->name('login.attempt');
+
 });
 
 
