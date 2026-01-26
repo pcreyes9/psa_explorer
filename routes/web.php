@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
-
+use App\Livewire\Membership\MemAccount;
 
 Route::middleware('guest')->group(function () {
 
@@ -42,6 +42,20 @@ Route::middleware('auth')->group(function () {
     return view('membership.account', [
         'memberId' => $member,
     ]);})->name('mem-account');
+
+    Route::get('/member/photo/{memberId}', [MemAccount::class, 'showImg'])
+    ->name('member.photo');
+
+    // Reports
+    Route::get('/reports-cme', function () {
+        return view('reports.cme');
+    })->name('reports-cme');
+
+    // Payments
+    Route::get('/browse-payments', function () {
+        return view('payments.browse');
+    })->name('payments-browse');
+
 
 
     Route::post('/logout', function () {

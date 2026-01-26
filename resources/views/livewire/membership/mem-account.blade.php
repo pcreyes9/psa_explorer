@@ -10,7 +10,7 @@
         </h4>
 
         <h4 class="">
-            {{ $member->psa_mem_stat}} / <strong>{{ $member->mem_stat}}</strong> 
+            {{ $member->psa_mem_stat}} / <strong>{{ $member->mem_stat}}</strong> / {{ $member->psa_chapter_code }}
         </h4>
     </div>
 
@@ -76,14 +76,23 @@
                         <!-- Account -->
                         <div class="card-body">
                             <div class="d-flex align-items-start align-items-sm-center gap-4">
-                                <img
+                                {{-- <img
                                     src="{{ asset('assets/img/avatars/1.png') }}"
                                     alt="user-avatar"
                                     class="d-block rounded"
                                     height="100"
                                     width="100"
                                     id="uploadedAvatar"
-                                />
+                                /> --}}
+
+                                <img 
+                                    src="{{ route('member.photo', $member->member_id_no) }}"
+                                    class="img-thumbnail"
+                                    height="150"
+                                    width="150"
+                                    alt="Member Photo"
+                                >
+
                                 {{-- <div class="button-wrapper">
                                     <label for="upload" class="btn btn-primary me-2 mb-4" tabindex="0">
                                         <span class="d-none d-sm-block">Upload new photo</span>
@@ -102,13 +111,13 @@
                                         <label for="psa_id" class="form-label">PSA ID</label>
                                         <input class="form-control" type="text" id="psa_id" name="psa_id" value="{{ $member->member_id_no }}" readonly />
                                     </div>
-                                    <div class="mb-3 col-md-4">
+                                    <div class="mb-3 col-md-6">
                                         <label for="psa_chapter" class="form-label">PSA Chapter</label>
-                                        <input class="form-control" type="text" name="psa_chapter" id="psa_chapter" value="{{ $member->psa_chapter_code }}" readonly />
+                                        <input class="form-control" type="text" name="psa_chapter" id="psa_chapter" value="{{ $member->psa_chapter_code }}-{{ $member->psa_chapter_desc }}" readonly />
                                     </div>
                                     <div class="mb-3 col-md-4">
                                         <label for="mem_type" class="form-label">Membership Type</label>
-                                        <input class="form-control" type="text" id="mem_type" name="mem_type" value="{{ $member->psa_mem_type }}" readonly />
+                                        <input class="form-control" type="text" id="mem_type" name="mem_type" value="{{ $member->psa_mem_type }}-{{ $member->Memtype }}" readonly />
                                     </div>
                                 </div>
                             </div>

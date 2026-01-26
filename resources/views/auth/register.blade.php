@@ -140,6 +140,7 @@
 
               <form id="formAuthentication" class="mb-3" action="{{ route('register.store') }}" method="POST">
                 @csrf
+                <h4 class="text-center">REGISTER</h4>
                 <div class="mb-3">
                   <label for="username" class="form-label">Username</label>
                   <input
