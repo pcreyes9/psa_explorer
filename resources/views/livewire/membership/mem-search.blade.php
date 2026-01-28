@@ -10,7 +10,8 @@
                     <i class="bx bx-search fs-4 lh-0"></i>
                     <input
                     type="text"
-                    wire:model.live="search"
+                    wire:model="search"
+                    wire:keydown.enter="searchMembers"
                     class="form-control border-0 shadow-none"
                     placeholder="Search..."
                     aria-label="Search..."
@@ -50,6 +51,7 @@
                     </tbody>
                 </table>
             </div>
+            {{-- {{ $members->links() }} --}}
         </div>
     @endif
 </div

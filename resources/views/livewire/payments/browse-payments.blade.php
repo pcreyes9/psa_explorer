@@ -105,10 +105,16 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                    Close
-                    </button>
-                    {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
+                    <div class="me-auto">
+                        <button class="btn btn-warning">Print OR</button>
+                        <button class="btn btn-primary">Update OR</button>
+                        <button class="btn btn-secondary">Print PR</button>
+                        <button class="btn btn-danger">Void Payment</button>
+                    </div>
+
+                    
+                    <button class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                    
                 </div>
             </div>
         </div>

@@ -18,6 +18,26 @@ class Ledger extends Component
         unset($data['mem_pic']); 
         
         $this->memberData = $data;
+        $this->archive_histo = DB::table('archive_histo')
+        // ->select('fiscalyear', 'trancode', 'itemcode', 'description', 'amount', 'orno', 'paydate')
+        ->where('psaid', $this->memberData['member_id_no'])
+        ->orderBy('fiscalyear', 'desc')
+        ->get();
+
+        $this->ledger = DB::table('member_ledger_bal')
+        // ->select('fiscal_year', 'tran_desc', 'dbit', 'cbit', 'bal')
+        ->where('member_id_no', $this->memberData['member_id_no'])
+        ->orderBy('fiscal_year', 'desc')
+        ->get();
+    //  dd($this->ledger);
+
+        $this->totalBalance = $this->ledger->sum('bal');
+
+        $this->payment_histo = DB::table('payments')
+        ->select('payment_date', 'payment_ref_no', 'payment_type', 'or_no', 'payment_total_amt', 'userid')
+        ->where('member_id_no', $this->memberData['member_id_no'])
+        ->orderBy('payment_date', 'desc')
+        ->get();
         
     }
     public function modalDues ($fiscalYear){
@@ -30,35 +50,11 @@ class Ledger extends Component
             ->get();
         // dd($this->modal_dues);
         $this->modalBalance = 0;
-
-
     }
 
 
     public function render()
     {
-        
-        $this->ledger = DB::table('member_ledger_bal')
-            // ->select('fiscal_year', 'tran_desc', 'dbit', 'cbit', 'bal')
-            ->where('member_id_no', $this->memberData['member_id_no'])
-            ->orderBy('fiscal_year', 'desc')
-            ->get();
-        //  dd($this->ledger);
-
-        $this->totalBalance = $this->ledger->sum('bal');
-
-        $this->payment_histo = DB::table('payments')
-            ->select('payment_date', 'payment_ref_no', 'payment_type', 'or_no', 'payment_total_amt', 'userid')
-            ->where('member_id_no', $this->memberData['member_id_no'])
-            ->orderBy('payment_date', 'desc')
-            ->get();
-
-        $this->archive_histo = DB::table('archive_histo')
-            // ->select('fiscalyear', 'trancode', 'itemcode', 'description', 'amount', 'orno', 'paydate')
-            ->where('psaid', $this->memberData['member_id_no'])
-            ->orderBy('fiscalyear', 'desc')
-            ->get();
-    
         return view('livewire.membership.ledger');
     }
 }

@@ -12,7 +12,7 @@ class BrowsePayments extends Component
 
     public function mount()
     {
-        $this->modalMember = DB::table('members as m')
+        $this->modalMember = DB::table('member as m')
         ->join('payments as p', function ($join) {
             $join->on(
                 DB::raw('p.member_id_no COLLATE Latin1_General_CI_AS'),
@@ -65,7 +65,7 @@ class BrowsePayments extends Component
 
 
         )
-        ->leftJoin('members as m', function ($join) {
+        ->leftJoin('member as m', function ($join) {
             $join->on(
                 DB::raw('p.member_id_no COLLATE Latin1_General_CI_AS'),
                 '=',
@@ -80,7 +80,7 @@ class BrowsePayments extends Component
     public function modalView($paymentRefNo)
     {
 
-        $this->modalMember = DB::table('members as m')
+        $this->modalMember = DB::table('member as m')
         ->join('payments as p', function ($join) {
             $join->on(
                 DB::raw('p.member_id_no COLLATE Latin1_General_CI_AS'),
