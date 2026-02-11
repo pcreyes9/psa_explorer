@@ -87,7 +87,7 @@
 
                                 <img 
                                     src="{{ route('member.photo', $member->member_id_no) }}"
-                                    class="img-thumbnail"
+                                    class="img-thumbnail rounded"
                                     height="150"
                                     width="150"
                                     alt="Member Photo"
@@ -173,6 +173,10 @@
                                         <label for="email" class="form-label">Name of Spouse (if married)</label>
                                         <input class="form-control" type="text" id="email" name="email" value="{{ $member->spouse_name }}" readonly />
                                     </div>
+                                    <div class="mb-3 col-md-2">
+                                        <label for="email" class="form-label">Birthday</label>
+                                        <input class="form-control" type="text" id="email" name="email" value="{{ $member->mem_birth_date }}" readonly />
+                                    </div>
 
 
                                     <div class="mb-3 col-md-2">
@@ -199,7 +203,8 @@
                                 </div>
                                 <div class="mt-2">
                                     <button type="submit" class="btn btn-primary me-2" disabled>Save changes</button>
-                                    <button type="reset" class="btn btn-outline-secondary" disabled>Cancel</button>
+                                    <a href="" class="btn btn-dark me-2" >Print COGS</a>
+                                    {{-- <button type="reset" class="btn btn-outline-secondary" disabled>Cancel</button> --}}
                                 </div>
                             </form>
                         </div>

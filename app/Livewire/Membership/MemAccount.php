@@ -29,7 +29,7 @@ class MemAccount extends Component
             })
             ->select($columns)
             ->select('member_id_no', 'mem_last_name', 'mem_first_name', 'mem_middle_name', 'psa_mem_type'
-            , 'm.psa_chapter_code', 'mem_prc_no', 'mem_mobile_no1', 'mem_email_address', 'mem_home_address', 'spouse_name'
+            , 'm.psa_chapter_code', 'mem_birth_date', 'mem_prc_no', 'mem_mobile_no1', 'mem_email_address', 'mem_home_address', 'spouse_name'
             , 'c.psa_chapter_desc', 'mt.Memtype', 'mem_pma_id_no', 'mem_prc_no', 'mem_phic_no', 'mem_fellow_no', 'mem_fellow_yr'
             , 'psa_mem_stat', 'mem_stat', 'mem_mobile_no2', 'mem_gender', 'mem_religion', 'mem_civil_status')
             ->where('member_id_no', $this->memberID)
@@ -62,9 +62,6 @@ class MemAccount extends Component
 
     public function render()
     {
-
-        
-            
         return view('livewire.membership.mem-account');
     }
 }

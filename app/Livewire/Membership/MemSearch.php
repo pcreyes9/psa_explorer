@@ -17,14 +17,19 @@ class MemSearch extends Component
     public function searchMembers()
     {
         // dd($this->search);
+        if (strlen($this->search) < 2) {
+            $this->members = [];
+            return;
+        }
         $this->members = DB::table('member')
         ->select('member_id_no', 'mem_last_name', 'mem_first_name', 'mem_middle_name', 'mem_prc_no', 'psa_chapter_code')
         ->when($this->search, function ($query) {
             $query->where('mem_last_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('mem_first_name', 'like', '%' . $this->search . '%')
+                    // ->orWhere('mem_first_name', 'like', '%' . $this->search . '%')
                     ->orWhere('member_id_no', 'like', '%' . $this->search . '%');
         })
         // ->paginate(40);
+        ->orderBy('mem_last_name', 'asc')
         ->get();
         // dd($this->members); 
     }

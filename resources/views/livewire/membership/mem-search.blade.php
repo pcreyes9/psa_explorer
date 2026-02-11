@@ -23,6 +23,7 @@
     @if ($search)
         <div class="card mx-4 my-3">
             <h5 class="card-header">Search results for: {{ $search }}</h5>
+            
 
             <div class="table-responsive text-nowrap">
                 <table class="table table-hover">
@@ -39,7 +40,7 @@
 
                     <tbody class="table-border-bottom-0">
                         @foreach ($members as $member)
-                            <tr wire:click='sendID("{{ $member->member_id_no }}")'>
+                            <tr wire:click='sendID("{{ $member->member_id_no }}")' style="cursor: pointer;">
                                 <td>{{ $member->member_id_no }}</td>
                                 <td>{{ $member->mem_last_name }}</td>
                                 <td>{{ $member->mem_first_name }}</td>
@@ -52,6 +53,10 @@
                 </table>
             </div>
             {{-- {{ $members->links() }} --}}
+        </div>
+    @else
+        <div class="card mx-4 my-3">
+            <p class="card-header">Please enter at least 2 characters to search.</p>
         </div>
     @endif
 </div
