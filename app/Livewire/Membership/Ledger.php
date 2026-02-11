@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class Ledger extends Component
 {
-    public $mem, $ledger, $totalBalance = 0, $modal_dues = [], $modalBalance = 0, $payment_histo = [], $archive_histo = [];
+    public $mem, $ledger, $totalBalance = 0, $ref_num, $modal_dues = [], $modalBalance = 0, $payment_histo = [], $archive_histo = [], $header = [];
 
     public array $memberData = [];
 
@@ -18,6 +18,7 @@ class Ledger extends Component
         unset($data['mem_pic']); 
         
         $this->memberData = $data;
+        
         $this->archive_histo = DB::table('archive_histo')
         // ->select('fiscalyear', 'trancode', 'itemcode', 'description', 'amount', 'orno', 'paydate')
         ->where('psaid', $this->memberData['member_id_no'])
@@ -40,18 +41,41 @@ class Ledger extends Component
         ->get();
         
     }
-    public function modalDues ($fiscalYear){
-        $this->modal_dues = DB::table('transaction_type_item')
+    public function modal ($code, $type){
+        // dd($type);
+
+        $this->header = ['Fiscal Year', 'Description', 'Charge', 'Credit', 'Balance'];
+
+        if($type == 'dues'){
+            $this->modal_dues = DB::table('transaction_type_item')
             // ->where('member_id_no', $modalID)
-            ->where('fiscal_year', $fiscalYear)
+            ->select('fiscal_year', 'item_code', 'charge_code', 'item_amount', 'item_amount')
+            ->where('fiscal_year', $code)
             ->where('charge_code', $this->memberData['psa_mem_type'])
             ->where('tran_code', 'MEMF')
             ->where( 'stat', 1)
             ->get();
         // dd($this->modal_dues);
         $this->modalBalance = 0;
-    }
+        
+        } elseif($type == 'payHisto'){
+        $this->ref_num = $code;
+        
+        $this->header = ['Item Code', 'Description', 'Fiscal Year', 'Amount'];
 
+        $this->modal_dues = DB::table('payments as p')
+            ->join('payment_items as pi', 'p.payment_ref_no', '=', 'pi.payment_ref_no')
+            ->select('pi.item_code',
+                'pi.tran_code',
+                'pi.fiscal_year',
+                'pi.amount_due'
+            )
+            ->where('pi.payment_ref_no', $code)
+            ->get();
+        // dd($this->modal_dues);
+        $this->modalBalance = 0;
+        } 
+    }
 
     public function render()
     {
