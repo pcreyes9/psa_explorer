@@ -67,7 +67,6 @@
                                 <tr wire:click="modal('{{ $item->fiscal_year }}', 'dues')" data-bs-toggle="modal"
                                     data-bs-target="#largeModal" style="cursor: pointer;">
 
-
                                     <td>{{ $item->fiscal_year }}</td>
                                     <td>{{ $item->tran_desc }}</td>
                                     <td>{{ number_format($item->dbit, 2) }}</td>
@@ -150,7 +149,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel3">Reference No: {{ $ref_num }}</h5>
+                    <h5 class="modal-title" id="exampleModalLabel3">{{ $top }}</h5>
                     <button
                         type="button"
                         class="btn-close"
@@ -210,6 +209,5 @@
             myModal.show();
         });
     </script>
-
 </div>
 

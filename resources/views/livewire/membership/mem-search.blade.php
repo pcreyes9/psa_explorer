@@ -9,12 +9,12 @@
                 <div class="nav-item d-flex align-items-center">
                     <i class="bx bx-search fs-4 lh-0"></i>
                     <input
-                    type="text"
-                    wire:model="search"
-                    wire:keydown.enter="searchMembers"
-                    class="form-control border-0 shadow-none"
-                    placeholder="Search..."
-                    aria-label="Search..."
+                        type="text"
+                        wire:model="search"
+                        wire:keydown.enter="searchMembers"
+                        class="form-control border-0 shadow-none"
+                        placeholder="Enter last name or PSA ID #"
+                        aria-label="Search..."
                     />
                 </div>
             </div>
@@ -24,7 +24,6 @@
         <div class="card mx-4 my-3">
             <h5 class="card-header">Search results for: {{ $search }}</h5>
             
-
             <div class="table-responsive text-nowrap">
                 <table class="table table-hover">
                     <thead>

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class Ledger extends Component
 {
-    public $mem, $ledger, $totalBalance = 0, $ref_num, $modal_dues = [], $modalBalance = 0, $payment_histo = [], $archive_histo = [], $header = [];
+    public $mem, $ledger, $totalBalance = 0, $top, $modal_dues = [], $modalBalance = 0, $payment_histo = [], $archive_histo = [], $header = [];
 
     public array $memberData = [];
 
@@ -47,6 +47,7 @@ class Ledger extends Component
         $this->header = ['Fiscal Year', 'Description', 'Charge', 'Credit', 'Balance'];
 
         if($type == 'dues'){
+            $this->top = 'Fiscal Year: ' . $code;
             $this->modal_dues = DB::table('transaction_type_item')
             // ->where('member_id_no', $modalID)
             ->select('fiscal_year', 'item_code', 'charge_code', 'item_amount', 'item_amount')
@@ -59,7 +60,8 @@ class Ledger extends Component
         $this->modalBalance = 0;
         
         } elseif($type == 'payHisto'){
-        $this->ref_num = $code;
+        
+        $this->top = 'Reference No: ' . $code;
         
         $this->header = ['Item Code', 'Description', 'Fiscal Year', 'Amount'];
 
