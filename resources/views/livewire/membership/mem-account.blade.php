@@ -72,142 +72,276 @@
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane fade show active" id="navs-pills-justified-profile" role="tabpanel">
-                        <!-- Account -->
-                        <div class="card-body">
-                            <div class="d-flex align-items-start align-items-sm-center gap-4">
-                                {{-- <img
-                                    src="{{ asset('assets/img/avatars/1.png') }}"
-                                    alt="user-avatar"
-                                    class="d-block rounded"
-                                    height="100"
-                                    width="100"
-                                    id="uploadedAvatar"
-                                /> --}}
+                    <div class="tab-pane fade show active"
+                        id="navs-pills-justified-profile"
+                        role="tabpanel">
 
-                                <img 
-                                    src="{{ route('member.photo', $member->member_id_no) }}"
-                                    class="img-thumbnail rounded"
-                                    height="150"
-                                    width="150"
-                                    alt="Member Photo"
-                                >
+                        <div class="">
 
-                                {{-- <div class="button-wrapper">
-                                    <label for="upload" class="btn btn-primary me-2 mb-4" tabindex="0">
-                                        <span class="d-none d-sm-block">Upload new photo</span>
-                                        <i class="bx bx-upload d-block d-sm-none"></i>
-                                        <input type="file" id="upload" class="account-file-input" hidden accept="image/png, image/jpeg" disabled />
-                                    </label>
-                                    <button type="button" class="btn btn-outline-secondary account-image-reset mb-4" disabled>
-                                        <i class="bx bx-reset d-block d-sm-none"></i>
-                                        <span class="d-none d-sm-block">Reset</span>
-                                    </button>
+                            <!-- HEADER -->
+                            <div class="card-header bg-white border-bottom">
 
-                                    <p class="text-muted mb-0">Allowed JPG, GIF or PNG. Max size of 800K</p>
-                                </div> --}}
-                                 <div class="row">
-                                    <div class="mb-3 col-md-4">
-                                        <label for="psa_id" class="form-label">PSA ID</label>
-                                        <input class="form-control" type="text" id="psa_id" name="psa_id" value="{{ $member->member_id_no }}" readonly />
-                                    </div>
-                                    <div class="mb-3 col-md-6">
-                                        <label for="psa_chapter" class="form-label">PSA Chapter</label>
-                                        <input class="form-control" type="text" name="psa_chapter" id="psa_chapter" value="{{ $member->psa_chapter_code }}-{{ $member->psa_chapter_desc }}" readonly />
-                                    </div>
-                                    <div class="mb-3 col-md-4">
-                                        <label for="mem_type" class="form-label">Membership Type</label>
-                                        <input class="form-control" type="text" id="mem_type" name="mem_type" value="{{ $member->psa_mem_type }}-{{ $member->Memtype }}" readonly />
-                                    </div>
+                                <div>
+                                    {{-- <h5 class="mb-0 text-primary">
+                                        {{ $member->member_id_no }} - {{ $member->psa_mem_type }} /
+                                        {{ $member->mem_last_name }}, {{ $member->mem_first_name }} {{ $member->mem_middle_name }}
+                                    </h5> --}}
+
+                                    <small class="text-muted">
+                                        {{ $isEditing ? 'Editing Mode Enabled' : 'View Mode' }}
+                                    </small>
                                 </div>
+
                             </div>
-                        </div>
 
-                        <hr class="my-0" />
+                            <div class="card-body">
 
-                        <div class="card-body">
-                            <form id="formAccountSettings" onsubmit="return false">
-                                <div class="row">
-                                    <div class="mb-3 col-md-6">
-                                        <label for="firstName" class="form-label">First Name</label>
-                                        <input class="form-control" type="text" id="firstName" name="firstName" value="{{ $member->mem_first_name }}" readonly />
+                                @if (session()->has('success'))
+                                    <div class="alert alert-success py-2">
+                                        {{ session('success') }}
                                     </div>
-                                    <div class="mb-3 col-md-6">
-                                        <label for="lastName" class="form-label">Last Name</label>
-                                        <input class="form-control" type="text" name="lastName" id="lastName" value="{{ $member->mem_last_name }}" readonly />
-                                    </div>
-                                    <div class="mb-3 col-md-6">
-                                        <label for="email" class="form-label">E-mail</label>
-                                        <input class="form-control" type="text" id="email" name="email" value="{{ $member->mem_email_address }}" readonly />
-                                    </div>
-                                    <div class="mb-3 col-md-6">
-                                        <label class="form-label" for="phoneNumber">Phone Number</label>
-                                        <div class="input-group input-group-merge">
-                                            {{-- <span class="input-group-text">US (+1)</span> --}}
-                                            <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="202 555 0111" value="{{ $member->mem_mobile_no1 }}, {{ $member->mem_mobile_no2 }}" readonly />
+                                @endif
+
+                                <form wire:submit.prevent="save">
+
+                                    <!-- TOP INFO -->
+                                    <div class="d-flex align-items-start gap-4 mb-4">
+
+                                        <img src="{{ route('member.photo', $member->member_id_no) }}"
+                                            class="img-thumbnail rounded"
+                                            width="150"
+                                            height="150">
+
+                                        <div class="row w-100 g-3">
+
+                                            <div class="col-md-4">
+                                                <label class="form-label text-muted">PSA ID</label>
+                                                <input class="form-control input-soft"
+                                                    value="{{ $member->member_id_no }}"
+                                                    disabled>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label class="form-label text-muted">Chapter</label>
+                                                <input class="form-control input-soft"
+                                                    value="{{ $member->psa_chapter_code }} - {{ $member->psa_chapter_desc }}"
+                                                    disabled>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label class="form-label text-muted">Membership Type</label>
+                                                <input class="form-control input-soft"
+                                                    value="{{ $member->psa_mem_type }} - {{ $member->Memtype }}"
+                                                    disabled>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <label class="form-label">First Name</label>
+                                                <input class="form-control input-soft"
+                                                    wire:model="first_name"
+                                                    @disabled(!$isEditing)>
+                                            </div>
+
+                                            <div class="col-md-5">
+                                                <label class="form-label">Last Name</label>
+                                                <input class="form-control input-soft"
+                                                    wire:model="last_name"
+                                                    @disabled(!$isEditing)>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <label class="form-label">Middle Name</label>
+                                                <input class="form-control input-soft"
+                                                    wire:model="middle_name"
+                                                    @disabled(!$isEditing)>
+                                            </div>
+
                                         </div>
                                     </div>
-                                    <div class="mb-3 col-md-12">
-                                        <label for="address" class="form-label">Address</label>
-                                        <textarea 
-                                            class="form-control" 
-                                            id="address" 
-                                            name="address" 
-                                            rows="3" 
-                                            readonly
-                                        >{{ $member->mem_home_address }}</textarea>
-                                    </div>
-                                    <div class="mb-3 col-md-2">
-                                        <label for="email" class="form-label">Gender</label>
-                                        <input class="form-control" type="text" id="email" name="email" value="{{ $member->mem_gender }}" readonly />
-                                    </div>
-                                    <div class="mb-3 col-md-2">
-                                        <label for="email" class="form-label">Religion</label>
-                                        <input class="form-control" type="text" id="email" name="email" value="{{ $member->mem_religion }}" readonly />
-                                    </div>
-                                    <div class="mb-3 col-md-2">
-                                        <label for="email" class="form-label">Civil Status</label>
-                                        <input class="form-control" type="text" id="email" name="email" value="{{ $member->mem_civil_status }}" readonly />
-                                    </div>
-                                    <div class="mb-3 col-md-6">
-                                        <label for="email" class="form-label">Name of Spouse (if married)</label>
-                                        <input class="form-control" type="text" id="email" name="email" value="{{ $member->spouse_name }}" readonly />
-                                    </div>
-                                    <div class="mb-3 col-md-2">
-                                        <label for="email" class="form-label">Birthday</label>
-                                        <input class="form-control" type="text" id="email" name="email" value="{{ $member->mem_birth_date }}" readonly />
+
+                                    <hr>
+
+                                    <!-- PERSONAL -->
+                                    <h6 class="text-primary mb-3">Personal Information</h6>
+
+                                    <div class="row g-3">
+                                        {{-- <div class="col-md-6">
+                                            <label class="form-label">First Name</label>
+                                            <input class="form-control input-soft"
+                                                wire:model="first_name"
+                                                @disabled(!$isEditing)>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="form-label">Last Name</label>
+                                            <input class="form-control input-soft"
+                                                wire:model="last_name"
+                                                @disabled(!$isEditing)>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="form-label">Middle Name</label>
+                                            <input class="form-control input-soft"
+                                                wire:model="middle_name"
+                                                @disabled(!$isEditing)>
+                                        </div> --}}
+
+                                        <div class="col-md-3">
+                                            <label class="form-label">Birthday</label>
+                                            <input class="form-control input-soft"
+                                                value="{{ $member->mem_birth_date }}"
+                                                disabled>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <label class="form-label">Gender</label>
+                                            <input class="form-control input-soft"
+                                                wire:model="gender"
+                                                @disabled(!$isEditing)>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <label class="form-label">Civil Status</label>
+                                            <input class="form-control input-soft"
+                                                wire:model="civil_status"
+                                                @disabled(!$isEditing)>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <label class="form-label">Religion</label>
+                                            <input class="form-control input-soft"
+                                                wire:model="religion"
+                                                @disabled(!$isEditing)>
+                                        </div>
+
                                     </div>
 
+                                    <hr class="my-4">
 
-                                    <div class="mb-3 col-md-2">
-                                        <label for="email" class="form-label">PRC No.</label>
-                                        <input class="form-control" type="text" id="email" name="email" value="{{ $member->mem_prc_no }}" readonly />
+                                    <!-- CONTACT -->
+                                    <h6 class="text-info mb-3">Contact Information</h6>
+
+                                    <div class="row g-3">
+
+                                        <div class="col-md-6">
+                                            <label class="form-label">Email</label>
+                                            <input class="form-control input-soft"
+                                                wire:model="email"
+                                                @disabled(!$isEditing)>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="form-label">Phone Number</label>
+                                            <input class="form-control input-soft"
+                                                wire:model="phone1"
+                                                @disabled(!$isEditing)>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label class="form-label">Address</label>
+                                            <textarea class="form-control input-soft"
+                                                    rows="3"
+                                                    wire:model="address"
+                                                    @disabled(!$isEditing)></textarea>
+                                        </div>
+
                                     </div>
-                                    <div class="mb-3 col-md-2">
-                                        <label for="email" class="form-label">PMA ID No.</label>
-                                        <input class="form-control" type="text" id="email" name="email" value="{{ $member->mem_pma_id_no }}" readonly />
+
+                                    <hr class="my-4">
+
+                                    <!-- PROFESSIONAL -->
+                                    <h6 class="text-success mb-3">Professional Details</h6>
+
+                                    <div class="row g-3">
+
+                                        <div class="col-md-4">
+                                            <label class="form-label">PRC No.</label>
+                                            <input class="form-control input-soft"
+                                                value="{{ $member->mem_prc_no }}"
+                                                disabled>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label class="form-label">PMA ID No.</label>
+                                            <input class="form-control input-soft"
+                                                value="{{ $member->mem_pma_id_no }}"
+                                                disabled>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label class="form-label">PHIC No.</label>
+                                            <input class="form-control input-soft"
+                                                value="{{ $member->mem_phic_no }}"
+                                                disabled>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label class="form-label">Fellow No.</label>
+                                            <input class="form-control input-soft"
+                                                value="{{ $member->mem_fellow_no }}"
+                                                disabled>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label class="form-label">Conferral Year</label>
+                                            <input class="form-control input-soft"
+                                                value="{{ $member->mem_fellow_yr }}"
+                                                disabled>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label class="form-label">Spouse</label>
+                                            <input class="form-control input-soft"
+                                                wire:model="spouse_name"
+                                                @disabled(!$isEditing)>
+                                        </div>
+
                                     </div>
-                                    <div class="mb-3 col-md-2">
-                                        <label for="email" class="form-label">PHIC No.</label>
-                                        <input class="form-control" type="text" id="email" name="email" value="{{ $member->mem_phic_no }}" readonly />
+
+                                    <!-- BOTTOM ACTION BAR -->
+                                    <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+
+                                        <small class="text-muted">
+                                            {{ $isEditing ? 'Editing mode active' : 'Click edit to modify profile' }}
+                                        </small>
+
+                                        <div class="d-flex gap-2">
+
+                                            <button type="button"
+                                                    class="btn btn-outline-dark"
+                                                    wire:click="openPurposeModal">
+                                                Print COGS
+                                            </button>
+
+                                            @if(!$isEditing)
+                                                <button type="button"
+                                                        class="btn btn-primary"
+                                                        wire:click="enableEdit">
+                                                    Edit Profile
+                                                </button>
+                                            @endif
+
+                                            @if($isEditing)
+                                                <button type="button"
+                                                        class="btn btn-outline-secondary"
+                                                        wire:click="cancelEdit">
+                                                    Cancel
+                                                </button>
+
+                                                <button type="submit"
+                                                        class="btn btn-success">
+                                                    Save Changes
+                                                </button>
+                                            @endif
+
+                                        </div>
+
                                     </div>
-                                    <div class="mb-3 col-md-2">
-                                        <label for="email" class="form-label">Fellow No.</label>
-                                        <input class="form-control" type="text" id="email" name="email" value="{{ $member->mem_fellow_no }}" readonly />
-                                    </div>
-                                    <div class="mb-3 col-md-2">
-                                        <label for="email" class="form-label">Conferral Year</label>
-                                        <input class="form-control" type="text" id="email" name="email" value="{{ $member->mem_fellow_yr}}" readonly />
-                                    </div>
-                                    
-                                </div>
-                                <div class="mt-2">
-                                    <button type="submit" class="btn btn-primary me-2" disabled>Save changes</button>
-                                    <a href="" class="btn btn-dark me-2" >Print COGS</a>
-                                    {{-- <button type="reset" class="btn btn-outline-secondary" disabled>Cancel</button> --}}
-                                </div>
-                            </form>
+
+                                </form>
+
+                            </div>
                         </div>
+                    </div>
 
                     {{-- <div class="card">
                         <h5 class="card-header">Delete Account</h5>
@@ -227,7 +361,6 @@
                             </form>
                         </div>
                     </div> --}}
-                    </div>
                     <div class="tab-pane fade" id="navs-pills-justified-ledger" role="tabpanel">
                         @livewire('membership.ledger', ['member' => $member], key('ledger-'.$member->member_id_no))
                     </div>
@@ -280,4 +413,68 @@
             </div> --}}
         </div>
     </div>
+    <div wire:ignore.self class="modal fade" id="purposeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+
+            <form wire:submit.prevent="savePurpose" class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Certificate of Good Standing</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <label class="form-label">Purpose</label>
+
+                    <select class="form-select" wire:model="purpose">
+                        <option value="">-- Select Purpose --</option>
+                        <option>PBA Written Exam</option>
+                        <option>PBA Oral Exam</option>
+                        <option>Philhealth Purposes</option>
+                        <option>Philhealth Renewal</option>
+                        <option>Philhealth Accreditation Renewal</option>
+                        <option>Whatever purpose it may serve her best</option>
+                        <option>Whatever purpose it may serve him best</option>
+                    </select>
+
+                    @error('purpose')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-outline-secondary"
+                            data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <button type="submit"
+                            class="btn btn-primary">
+                        Generate
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const modalEl = document.getElementById('purposeModal');
+            const modal = new bootstrap.Modal(modalEl);
+
+            window.addEventListener('show-purpose-modal', () => {
+                modal.show();
+            });
+
+            window.addEventListener('hide-purpose-modal', () => {
+                modal.hide();
+            });
+
+        });
+    </script>
 </div>

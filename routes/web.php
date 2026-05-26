@@ -6,6 +6,17 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Livewire\Membership\MemAccount;
 
+use Illuminate\Support\Facades\DB;
+
+Route::get('/db-check', function () {
+    try {
+        DB::connection()->getPdo();
+        return "Database connected successfully ✅";
+    } catch (\Exception $e) {
+        return "DB connection failed ❌: " . $e->getMessage();
+    }
+});
+
 Route::middleware('guest')->group(function () {
 
     Route::get('/login', function () {

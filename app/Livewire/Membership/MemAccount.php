@@ -4,21 +4,29 @@ namespace App\Livewire\Membership;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class MemAccount extends Component
 {
-    public $memberID, $member, $cme_activities;
+    public $memberID;
+    public $member;
+    public $cme_activities;
+
+    public $isEditing = false;
+
+    // editable fields
+    public $first_name, $last_name, $middle_name;
+    public $email, $phone1, $phone2, $address;
+    public $gender, $religion, $civil_status, $spouse_name;
+
+    public $purpose = '';
+    public $showPurposeModal = false;
+
+
     public function mount($member_id)
     {
         $this->memberID = $member_id;
-        $columns = array_diff(Schema::getColumnListing('member'), ['mem_pic', 'remarks', 'cme_units', 'mem_prc_exp_date', '[mem_fax_no]', '[old_id]', '[mem_province]', '[mem_birth_place]', '[spouse_occupation]', '[spouse_address]', '[spouse_phone_no]', '[mem_pma_exp_yr]', '[mem_sr_no]', '[mem_practice_pref]', '[mem_dbfstat]', '[mem_total_bal]']);
-
-        $columns = array_map(fn($col) => "m.{$col}", $columns);
-
-        $columns[] = 'c.psa_chapter_desc';
-        $columns[] = 'mt.Memtype';
 
         $this->member = DB::table('member as m')
             ->join('chapters as c', function ($join) {
@@ -27,37 +35,119 @@ class MemAccount extends Component
             ->join('membership_type as mt', function ($join) {
                 $join->on('m.psa_mem_type', '=', DB::raw('mt.Memtypecode COLLATE DATABASE_DEFAULT'));
             })
-            ->select($columns)
-            ->select('member_id_no', 'mem_last_name', 'mem_first_name', 'mem_middle_name', 'psa_mem_type'
-            , 'm.psa_chapter_code', 'mem_birth_date', 'mem_prc_no', 'mem_mobile_no1', 'mem_email_address', 'mem_home_address', 'spouse_name'
-            , 'c.psa_chapter_desc', 'mt.Memtype', 'mem_pma_id_no', 'mem_prc_no', 'mem_phic_no', 'mem_fellow_no', 'mem_fellow_yr'
-            , 'psa_mem_stat', 'mem_stat', 'mem_mobile_no2', 'mem_gender', 'mem_religion', 'mem_civil_status')
-            ->where('member_id_no', $this->memberID)
+            ->where('m.member_id_no', $this->memberID)
+            ->select(
+                'm.member_id_no',
+                'm.mem_first_name',
+                'm.mem_last_name',
+                'm.mem_middle_name',
+                'm.mem_email_address',
+                'm.mem_mobile_no1',
+                'm.mem_mobile_no2',
+                'm.mem_home_address',
+                'm.mem_gender',
+                'm.mem_religion',
+                'm.mem_civil_status',
+                'm.spouse_name',
+                'm.mem_birth_date',
+                'm.mem_prc_no',
+                'm.mem_pma_id_no',
+                'm.mem_phic_no',
+                'm.mem_fellow_no',
+                'm.mem_fellow_yr',
+                'm.member_id_no',
+                'm.psa_mem_type',
+                'm.psa_mem_stat',
+                'm.mem_stat',
+                'm.psa_chapter_code',
+                'c.psa_chapter_desc',
+                'mt.Memtype',
+
+            )
             ->first();
-            // dd($this->member);
+
+        $this->fillForm();
 
         $this->cme_activities = DB::table('cme_program_registration')
             ->where('member_id_no', $this->memberID)
             ->orderBy('cme_year', 'desc')
             ->get();
-
     }
 
-    public function showImg($memberId)
+    private function fillForm()
     {
-        $photo = DB::table('member')
-            ->where('member_id_no', $memberId)
-            ->value('mem_pic');
-
-        if (!$photo) {
-        return response()->file(
-            public_path('assets/img/favicon/PSA_LOGO1.png')
-        );
+        $this->first_name = $this->member->mem_first_name;
+        $this->last_name = $this->member->mem_last_name;
+        $this->middle_name = $this->member->mem_middle_name;
+        $this->email = $this->member->mem_email_address;
+        $this->phone1 = $this->member->mem_mobile_no1;
+        $this->phone2 = $this->member->mem_mobile_no2;
+        $this->address = $this->member->mem_home_address;
+        $this->gender = $this->member->mem_gender;
+        $this->religion = $this->member->mem_religion;
+        $this->civil_status = $this->member->mem_civil_status;
+        $this->spouse_name = $this->member->spouse_name;
     }
 
-        return response($photo)
-            ->header('Content-Type', 'image/jpeg')
-            ->header('Cache-Control', 'public, max-age=86400');
+    public function enableEdit()
+    {
+        $this->isEditing = true;
+    }
+
+    public function cancelEdit()
+    {
+        $this->fillForm();
+        $this->isEditing = false;
+    }
+
+    public function save()
+    {
+        DB::table('member')
+            ->where('member_id_no', $this->memberID)
+            ->update([
+                'mem_first_name' => $this->first_name,
+                'mem_last_name' => $this->last_name,
+                'mem_middle_name' => $this->middle_name,
+                'mem_email_address' => $this->email,
+                'mem_mobile_no1' => $this->phone1,
+                'mem_mobile_no2' => $this->phone2,
+                'mem_home_address' => $this->address,
+                'mem_gender' => $this->gender,
+                'mem_religion' => $this->religion,
+                'mem_civil_status' => $this->civil_status,
+                'spouse_name' => $this->spouse_name,
+            ]);
+
+        $this->isEditing = false;
+
+        session()->flash('success', 'Profile updated successfully!');
+    }
+
+    public function openPurposeModal()
+    {
+        $this->reset('purpose');
+        $this->dispatch('show-purpose-modal');
+    }
+
+    public function savePurpose()
+    {
+        $this->validate([
+            'purpose' => 'required'
+        ]);
+        // dd($this->member);
+        $pdf = Pdf::loadView('pdf.goodtandingPDF', [
+            'info' => $this->member,
+            'purpose' => $this->purpose,
+            // 'mem_type' => $this->mem_type,
+        ]);
+        
+        // Example: save or generate COGS
+        session()->flash('success', 'Purpose saved: ' . $this->purpose);
+
+        $this->dispatch('hide-purpose-modal');
+
+        return response()->streamDownload(function () use ($pdf) { echo $pdf->stream(); }, $this->first_name . ' ' . $this->last_name . ' - Certificate of Good Standing.pdf');
+
     }
 
     public function render()

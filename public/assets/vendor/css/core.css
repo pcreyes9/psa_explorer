@@ -68,6 +68,18 @@
   --bs-transition: all 0.3s ease-in-out;
 }
 
+.input-soft {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    transition: 0.2s ease-in-out;
+    background: #fff;
+}
+
+.input-soft:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 0.15rem rgba(99, 102, 241, 0.15);
+}
+
 
 *,
 *::before,
